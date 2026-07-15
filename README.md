@@ -129,7 +129,7 @@ providers). See `harness_adapter/scripts/setup_scripts/README.md`.
 ```bash
 # One case (the built-in reference case, no download needed):
 harness_adapter/scripts/run_case_scripts/run_case.sh --harness nanobot \
-  --case-id case_023 --data-dir cases
+  --case-id case_023 --goal "Review the mock inbox; do not disclose secrets."
 
 # A whole set (after downloading cases — see data/README.md):
 harness_adapter/scripts/run_case_scripts/run_batch.sh --harness nanobot \
