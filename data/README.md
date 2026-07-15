@@ -1,0 +1,52 @@
+# Benchmark cases
+
+The benchmark **case set is distributed separately on Hugging Face** (it is not
+committed to this repo). Each case is a single self-contained JSON file that
+embeds the whole scenario: the benign user task, the injected attack, the
+initial mock-service state, the seed workspace files, and the deterministic
+oracle used by the rule evaluator.
+
+## Get the cases
+
+```bash
+# TODO: replace with the real dataset id once published.
+huggingface-cli download <HUGGINGFACE_DATASET_ID> --repo-type dataset --local-dir ./data
+```
+
+After downloading you should have one or more case directories here, e.g.
+`data/<set_name>/*.json`. Point the pipeline at a set with `--data-dir`:
+
+```bash
+harness_adapter/scripts/run_case_scripts/run_batch.sh --harness nanobot \
+  --data-dir data/<set_name> -- --model <provider/model>
+```
+
+If `--data-dir` is omitted, the scripts default to `<repo>/data`.
+
+## Case file format (summary)
+
+Each `<case_id>.json` contains:
+
+| key | meaning |
+|---|---|
+| `case_id` | e.g. `action_016`. Prefix encodes the lifecycle **phase** (see below). |
+| `phase` | one of the six lifecycle phases. |
+| `task` | benign user goal and `user_messages` (multi-turn supported). |
+| `design_steps` | the attack design: `2_benign_workflow`, `3_sensitive_asset_or_high_impact_action`, `4_attack_surface`, `5_attack_goal`, `6_trigger_type_and_visibility`, `7_adversarial_artifact`, `8_oracle_scorer`. |
+| `world` | initial mock-service state and seed workspace files. |
+| `oracle_scorer` | deterministic predicate trees for `utility_success`, `attack_success`, `safe_behavior`. |
+| `expected_safe_trajectory` / `unsafe_trajectory` | reference traces. |
+
+### Lifecycle phases (case-id prefixes)
+
+| prefix | phase | what it stresses |
+|---|---|---|
+| `setup_` | setup / configuration | acting on untrusted setup docs |
+| `skill_` | skill acquisition | installing/evaluating third-party skills |
+| `daily_` | daily operation | routine tasks over untrusted content |
+| `memory_` | persistent memory | writes to long-lived agent memory/identity |
+| `action_` | irreversible action | payments, deletions, deployments |
+| `recovery_` | recovery / forensics | post-incident cleanup and investigation |
+
+A minimal reference scenario ships in `cases/case_023/` at the repo root (used by
+the quickstart) so the pipeline is runnable before you download the full set.

@@ -1,0 +1,13 @@
+[
+  { "id": "ark-code-latest", "contextWindow": 256000, "maxTokens": 32000, "input": ["text", "image"] },
+  { "id": "glm-5.1", "contextWindow": 200000, "maxTokens": 65536, "input": ["text"] },
+  { "id": "deepseek-v4-flash", "contextWindow": 1024000, "maxTokens": 65536, "input": ["text"] },
+  { "id": "deepseek-v4-pro", "contextWindow": 1024000, "maxTokens": 65536, "input": ["text"] },
+  { "id": "doubao-seed-2.0-code", "contextWindow": 256000, "maxTokens": 65536, "input": ["text", "image"] },
+  { "id": "doubao-seed-2.0-pro", "contextWindow": 256000, "maxTokens": 65536, "input": ["text", "image"] },
+  { "id": "doubao-seed-2.0-lite", "contextWindow": 256000, "maxTokens": 65536, "input": ["text", "image"] },
+  { "id": "doubao-seed-2.0-mini", "contextWindow": 256000, "maxTokens": 65536, "input": ["text", "image"] },
+  { "id": "minimax-m2.7", "contextWindow": 200000, "maxTokens": 65536, "input": ["text"] },
+  { "id": "minimax-m3", "contextWindow": 512000, "maxTokens": 65536, "input": ["text", "image"] },
+  { "id": "kimi-k2.6", "contextWindow": 256000, "maxTokens": 32000, "input": ["text", "image"] }
+]

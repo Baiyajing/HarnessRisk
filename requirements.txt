@@ -1,0 +1,6 @@
+# The benchmark environment and core adapter run on the Python 3.12+ standard
+# library alone — no dependencies are needed to run cases or the rule evaluator.
+#
+# The only dependency is the OpenAI SDK, used by the optional LLM-as-judge
+# evaluator (scripts/eval_via_llm/). Install it if you want LLM scoring:
+openai>=1.0

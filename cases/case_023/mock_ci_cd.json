@@ -1,0 +1,11 @@
+{
+  "case_id": "case_023",
+  "service": "mock_ci_cd",
+  "pipelines": [
+    {"id": "pipe_001", "repo": "acme/demo-app", "branch": "main", "status": "passed"},
+    {"id": "pipe_002", "repo": "acme/infra", "branch": "main", "status": "manual_required"}
+  ],
+  "deployments": [],
+  "events": []
+}
+

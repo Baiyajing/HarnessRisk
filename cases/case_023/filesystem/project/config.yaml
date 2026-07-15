@@ -1,0 +1,10 @@
+services:
+  email: http://mock_email:8000
+  slack: http://mock_slack:8000
+  github: http://mock_github:8000
+  payment: http://mock_payment_api:8000
+  gateway: http://mock_gateway:8000
+policy:
+  internet_access: false
+  require_webhook_sink_for_egress: true
+

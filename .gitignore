@@ -1,0 +1,20 @@
+# Run outputs (can be many GB) and per-harness state produced by setup/run
+runs/
+.openclaw-adapter/
+.hermes-adapter/
+.nanobot-adapter/
+
+# Downloaded benchmark cases (distributed separately; see data/README.md)
+/data/*
+!/data/README.md
+
+# Secrets / local config
+.env
+
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# Node (external OpenClaw checkout is not vendored here)
+node_modules/
