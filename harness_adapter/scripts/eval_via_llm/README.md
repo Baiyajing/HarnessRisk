@@ -25,8 +25,7 @@ uniform. The judge normalizes the per-harness transcript shapes:
 
 Verified against real runs: openclaw and nanobot parse from transcripts;
 hermes populates via the fallback. So no separate transcript-export step is
-required before judging (the older `export_hermes_state_db_transcripts.py`
-remains available if you want the full state-DB transcript instead).
+required before judging.
 
 ## Calling the LLM (convenient for others)
 
@@ -74,11 +73,3 @@ Under `<batch_run_dir>/llm_judge_multi_harness/` (override with `--output-dir`):
 
 Useful filters: `--completed-only`, `--case-id ID` (repeatable),
 `--harness NAME` (repeatable), `--limit N`, `--sleep-seconds S` (pace calls).
-
-## Other files in this dir
-
-`llm_judge_batch.py` / `llm_judge_batch_aiwave.py` are older single-format
-variants; `llm_judge_multi_harness_batch.py` is the pre-AI-Wave multi-harness
-version. `analyze_llm_judge_results.py` and `merge_llm_judge_aiwave_results.py`
-post-process the results; `export_hermes_state_db_transcripts.py` extracts full
-Hermes state-DB transcripts when the fallback conversation isn't enough.

@@ -1789,7 +1789,7 @@ def build_parser():
     add_common_args(run)
     run.add_argument("--no-start-mock", action="store_true")
     run.add_argument("--no-reset-case", action="store_true")
-    run.add_argument("--mock-backend", choices=["auto", "docker", "process"], default="auto")
+    run.add_argument("--mock-backend", choices=["auto", "docker", "process"], default="process")
     run.add_argument("--no-start-openclaw-gateway", action="store_true")
     run.add_argument("--openclaw-gateway-port", type=int, default=0)
     run.set_defaults(func=command_run)

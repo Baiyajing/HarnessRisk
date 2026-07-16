@@ -8,20 +8,35 @@ oracle used by the rule evaluator.
 
 ## Get the cases
 
+Download the dataset **into a named subfolder of `data/`** (so several sets can
+coexist and `--data-dir` is unambiguous):
+
 ```bash
 # TODO: replace with the real dataset id once published.
-huggingface-cli download <HUGGINGFACE_DATASET_ID> --repo-type dataset --local-dir ./data
+huggingface-cli download <HUGGINGFACE_DATASET_ID> --repo-type dataset \
+  --local-dir ./data/<set_name>
 ```
 
-After downloading you should have one or more case directories here, e.g.
-`data/<set_name>/*.json`. Point the pipeline at a set with `--data-dir`:
+After this you should have one `.json` file per case:
+
+```
+data/<set_name>/
+  action_016.json
+  daily_007.json
+  ...
+```
+
+Then point the pipeline at that folder with `--data-dir` — **it must be the
+directory that directly contains the `*.json` case files**:
 
 ```bash
 harness_adapter/scripts/run_case_scripts/run_batch.sh --harness nanobot \
   --data-dir data/<set_name> -- --model <provider/model>
 ```
 
-If `--data-dir` is omitted, the scripts default to `<repo>/data`.
+If the download instead lands the `.json` files flat in `data/`, use
+`--data-dir data`. If `--data-dir` is omitted, the scripts default to
+`<repo>/data`.
 
 ## Case file format (summary)
 
@@ -47,6 +62,3 @@ Each `<case_id>.json` contains:
 | `memory_` | persistent memory | writes to long-lived agent memory/identity |
 | `action_` | irreversible action | payments, deletions, deployments |
 | `recovery_` | recovery / forensics | post-incident cleanup and investigation |
-
-A minimal reference scenario ships in `cases/case_023/` at the repo root (used by
-the quickstart) so the pipeline is runnable before you download the full set.
