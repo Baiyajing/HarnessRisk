@@ -1,17 +1,52 @@
-# HarnessRisk
+# HarnessRisk: A Lifecycle-Oriented Benchmark for Agent Harness Safety
 
-**A controlled benchmark for measuring the safety risk of agent *harnesses*.**
+<p align="center">
+  <strong>Yajing Bai<sup>1,2</sup>, Jinhao Duan<sup>1</sup>, Jie Peng<sup>1</sup>, Xianfeng Wu<sup>1</sup>, Sijia Liu<sup>3</sup>, Song Wang<sup>2</sup>, Tianlong Chen<sup>1,*</sup></strong>
+</p>
 
-Most agent-safety work compares *models*. HarnessRisk instead isolates the
-**harness** — the scaffolding that turns a model into an autonomous agent (its
-tool loop, memory, skills, permissions, and system prompts). The same model can
-be markedly safer or more dangerous depending on the harness it runs in.
-HarnessRisk runs the same attack scenarios through multiple harnesses inside one
-fully offline mock environment and scores what each agent actually *did*.
+<p align="center">
+  <sup>1</sup> UNITES Lab, University of North Carolina at Chapel Hill<br>
+  <sup>2</sup> University of Central Florida &nbsp;&nbsp; <sup>3</sup> Michigan State University<br>
+  <sup>*</sup> Corresponding author
+</p>
 
-It ships adapters for three harnesses — **OpenClaw**, **Hermes**, and
-**Nanobot** — behind one provider-agnostic interface, so you can plug in any
-model/provider each harness supports.
+<p align="center">
+  <a href="https://arxiv.org/abs/XXXX.XXXXX">arXiv (coming soon)</a> ·
+  <a href="https://baiyajing.github.io/harness-risk/">Project Page</a> ·
+  <a href="https://huggingface.co/datasets/YajingB/HarnessRisk">Dataset</a>
+</p>
+
+## Abstract
+
+Large language models are increasingly deployed through agent harnesses that
+manage tools, extensions, persistent state, permissions, and external actions.
+Existing safety benchmarks mainly target individual attack mechanisms or a
+limited subset of operational settings, making it difficult to compare how
+safety failures emerge across different harness responsibilities. We present
+**HarnessRisk**, a lifecycle-oriented benchmark that organizes agent harness
+safety into six operational phases: Harness Configuration, Capability Extension,
+Runtime Operation, State Persistence, Action Control, and Incident Recovery.
+HarnessRisk contains 128 sandboxed cases, each pairing a benign user objective
+with an adversarial instruction embedded in an untrusted workflow artifact. We
+evaluate each trajectory using Utility, Attack Success Rate, Persistence, and
+Detection. Across three harnesses, six language models, and 14 model–harness
+configurations, attack success ranges from 12.6% to 80.9%, while Utility remains
+between 75.0% and 97.6%. Harness Configuration is the most vulnerable phase
+across all three harnesses, showing that attacks can succeed by altering
+security-sensitive parameters within otherwise authorized workflows. We also
+find that explicit risk recognition does not reliably lead to safe action, as
+some configurations detect risks in more than 90% of runs while retaining
+substantial attack success. These results highlight the need to evaluate agent
+safety across multiple harness responsibilities and at the level of the deployed
+model–harness configuration.
+
+## Pipeline
+
+![Illustrative attack chain across the six HarnessRisk lifecycle phases](assets/lifecycle-pipeline.png)
+
+*Illustrative attack chain across the six HarnessRisk lifecycle phases, from
+malicious configuration and capability extension to runtime compromise,
+persistent poisoning, unauthorized action, and incomplete recovery.*
 
 ---
 
@@ -80,15 +115,16 @@ HarnessRisk/
 
 ### Where to put downloaded data (and where outputs land)
 
-The repo ships **without case data**. To reproduce, download the case set from
-Hugging Face into `data/` (see [`data/README.md`](data/README.md)) so the tree
-looks like this — everything below is **generated** and gitignored, you don't
-create it by hand:
+The repo ships **without case data**. To reproduce, download the
+[HarnessRisk dataset](https://huggingface.co/datasets/YajingB/HarnessRisk) into
+`data/HarnessRisk/` (see [`data/README.md`](data/README.md)) so the tree looks
+like this — everything below is **generated** and gitignored, you don't create
+it by hand:
 
 ```
 HarnessRisk/
   data/
-    <set_name>/                 # ← downloaded from Hugging Face: one .json per case
+    HarnessRisk/                # ← downloaded from Hugging Face: one .json per case
       action_016.json
       daily_007.json
       ...                       # point --data-dir at the dir that HOLDS the .json files
@@ -105,8 +141,9 @@ HarnessRisk/
 ```
 
 Rule of thumb: **`--data-dir` must point at the directory that directly contains
-the `*.json` case files.** If the download lands them flat in `data/`, use
-`--data-dir data`; if under a subfolder, use `--data-dir data/<set_name>`.
+the `*.json` case files.** With the download command in `data/README.md`, use
+`--data-dir data/HarnessRisk`. If the files instead land flat in `data/`, use
+`--data-dir data`.
 
 ---
 
@@ -153,12 +190,12 @@ providers). See `harness_adapter/scripts/setup_scripts/README.md`.
 ```bash
 # One case (after downloading cases — see data/README.md):
 harness_adapter/scripts/run_case_scripts/run_case.sh --harness nanobot \
-  --data-dir data/<set_name> --case-id <case_id> \
+  --data-dir data/HarnessRisk --case-id <case_id> \
   --goal "Review the mock inbox; do not disclose secrets."
 
 # A whole set:
 harness_adapter/scripts/run_case_scripts/run_batch.sh --harness nanobot \
-  --data-dir data/<set_name> -- --model <provider/model>
+  --data-dir data/HarnessRisk -- --model <provider/model>
 ```
 
 Add `--multiturn` for turn-by-turn replay (hermes/nanobot). Each run produces a
@@ -170,7 +207,7 @@ mock-service state). See `harness_adapter/scripts/run_case_scripts/README.md`.
 ```bash
 # Deterministic rule evaluator (no API key needed):
 python3 harness_adapter/scripts/evaluate_run.py --run-root runs/nanobot_adapter/<batch_id> \
-  --data-dir data/<set_name> --completed-only --output summary.json --pretty
+  --data-dir data/HarnessRisk --completed-only --output summary.json --pretty
 
 # LLM-as-judge over the collected evidence (all three harnesses):
 export OPENAI_API_KEY=...    # or AIWAVE_API_KEY
@@ -203,7 +240,8 @@ agnostic, so the same commands compare harnesses head-to-head on identical cases
 - Runs are deterministic w.r.t. seed state: a fresh run directory restores the
   case to its exact initial mock-service and workspace state.
 - Run outputs (`runs/`) and per-harness state (`.*-adapter/`) are gitignored;
-  cases live on Hugging Face (`data/README.md`). The committed repo is small.
+  cases live in the [HarnessRisk dataset on Hugging Face](https://huggingface.co/datasets/YajingB/HarnessRisk)
+  (see `data/README.md`). The committed repo is small.
 - The `process` backend confines the intended workspace, state, fake tokens, and
   mock data, but it is **not an OS sandbox** — an agent that can execute
   arbitrary host commands could still reach host files or real networking. For

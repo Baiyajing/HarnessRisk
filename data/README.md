@@ -1,9 +1,10 @@
 # Benchmark cases
 
-The benchmark **case set is distributed separately on Hugging Face** (it is not
-committed to this repo). Each case is a single self-contained JSON file that
-embeds the whole scenario: the benign user task, the injected attack, the
-initial mock-service state, the seed workspace files, and the deterministic
+The benchmark **case set is distributed separately in the
+[HarnessRisk dataset on Hugging Face](https://huggingface.co/datasets/YajingB/HarnessRisk)**
+(it is not committed to this repo). Each case is a single self-contained JSON
+file that embeds the whole scenario: the benign user task, the injected attack,
+the initial mock-service state, the seed workspace files, and the deterministic
 oracle used by the rule evaluator.
 
 ## Get the cases
@@ -12,15 +13,14 @@ Download the dataset **into a named subfolder of `data/`** (so several sets can
 coexist and `--data-dir` is unambiguous):
 
 ```bash
-# TODO: replace with the real dataset id once published.
-huggingface-cli download <HUGGINGFACE_DATASET_ID> --repo-type dataset \
-  --local-dir ./data/<set_name>
+hf download YajingB/HarnessRisk --repo-type dataset \
+  --local-dir ./data/HarnessRisk
 ```
 
 After this you should have one `.json` file per case:
 
 ```
-data/<set_name>/
+data/HarnessRisk/
   action_016.json
   daily_007.json
   ...
@@ -31,7 +31,7 @@ directory that directly contains the `*.json` case files**:
 
 ```bash
 harness_adapter/scripts/run_case_scripts/run_batch.sh --harness nanobot \
-  --data-dir data/<set_name> -- --model <provider/model>
+  --data-dir data/HarnessRisk -- --model <provider/model>
 ```
 
 If the download instead lands the `.json` files flat in `data/`, use
