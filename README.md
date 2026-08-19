@@ -11,7 +11,7 @@
 </p>
 
 <p align="center">
-  <a href="https://arxiv.org/abs/XXXX.XXXXX">arXiv (coming soon)</a> ·
+  <a href="https://arxiv.org/abs/2608.17597">arXiv</a> ·
   <a href="https://baiyajing.github.io/harness-risk/">Project Page</a> ·
   <a href="https://huggingface.co/datasets/YajingB/HarnessRisk">Dataset</a>
 </p>
